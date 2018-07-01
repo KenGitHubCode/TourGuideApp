@@ -1,3 +1,9 @@
 <resources>
+    <!-- Title for the application. [CHAR LIMIT=12] -->
     <string name="app_name">Tour Guide App</string>
+    <!-- Category names [CHAR LIMIT=20] -->
+    <string name="category_kyoto">Kyoto</string>
+    <string name="category_osaka">Osaka</string>
+    <string name="category_tokyo">Tokyo</string>
+    <string name="category_hiroshima">Hiroshima</string>
 </resources>
