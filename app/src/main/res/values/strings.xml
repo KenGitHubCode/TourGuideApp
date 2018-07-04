@@ -6,4 +6,5 @@
     <string name="category_osaka">Osaka</string>
     <string name="category_tokyo">Tokyo</string>
     <string name="category_hiroshima">Hiroshima</string>
+    <string name="place_info">More Information...</string>
 </resources>

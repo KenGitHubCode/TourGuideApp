@@ -23,6 +23,9 @@
     <!-- Background color for app -->
     <color name="tan_background">#FFF7DA</color>
 
+    <!-- Background color for app -->
+    <color name="white_background">#ffffff</color>
+
     <!-- Background color for the numbers category -->
     <color name="category_osaka">#FD8E09</color>
 

@@ -69,9 +69,9 @@ public class CategoryAdapter extends FragmentPagerAdapter {
             case 1:
                 return mContext.getString(R.string.category_osaka);
             case 2:
-                return mContext.getString(R.string.category_tokyo);
-            case 3:
                 return mContext.getString(R.string.category_hiroshima);
+            case 3:
+                return mContext.getString(R.string.category_tokyo);
             default:
                 return mContext.getString(R.string.category_kyoto);
         }

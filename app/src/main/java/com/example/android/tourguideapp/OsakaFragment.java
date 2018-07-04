@@ -93,16 +93,16 @@ public class OsakaFragment extends Fragment {
         mContext = getActivity().getApplicationContext();
 
         // Create ArrayList  , using ArrayList for variable size array
-        final ArrayList<Word> words = new ArrayList<Word>();
+        final ArrayList<Place> places = new ArrayList<Place>();
         // Add values to the ArrayList item
-        words.add(new Word("Attraction 1", "Desctiption or Locaiton information", R.drawable.t1));
-        words.add(new Word("Attraction 2", "Desctiption or Locaiton information", R.drawable.k1));
+        places.add(new Place("Neko Café Time", "Fushimi ward, Kyoto", R.drawable.k5));
+        places.add(new Place("Neko Café Time", "Fushimi ward, Kyoto", R.drawable.k5));
 
-        //initialize itemsAdapter using words ArrayList
-        WordAdapter adapter = new WordAdapter(getActivity(), words, R.color.category_kyoto);
+        //initialize itemsAdapter using places ArrayList
+        PlaceAdapter adapter = new PlaceAdapter(getActivity(), places, R.color.white_background);
         //Initialize listView as the list View from the applicable xml file
         ListView listView = (ListView) rootView.findViewById(R.id.list);
-        //set the adapter for listView (which is "list" view in the applicable xml) to itemsView using words
+        //set the adapter for listView (which is "list" view in the applicable xml) to itemsView using places
         listView.setAdapter(adapter);
 
 
@@ -116,7 +116,7 @@ public class OsakaFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //Create class instance to reference when assigning resource
-                Word selectedWord = words.get(position);
+                Place selectedPlace = places.get(position);
 
                 // RELEASE media player before assigning new media
                 releaseMediaPlayer();
@@ -124,7 +124,7 @@ public class OsakaFragment extends Fragment {
                 //request Audio FOCUS before playing
                 if (requestAudioFocus()) {
                     //ASSIGN RESOURCE based on position of clicked item and play ie start
-                    mp = MediaPlayer.create(getActivity(), selectedWord.getItemAudio());
+                    mp = MediaPlayer.create(getActivity(), selectedPlace.getItemAudio());
                     //PLAY the mediaplayer
                     mp.start();
                     //RELEASE: SetOnCompletionListen to ivoke RELEASE after playback to reduce memory usage

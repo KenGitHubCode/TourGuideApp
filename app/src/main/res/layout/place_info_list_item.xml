@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ddd"
+    android:orientation="vertical"
+    android:padding="8dp">
+
+    <android.support.v7.widget.CardView
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/place_info_card_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:layout_gravity="center"
+        card_view:cardBackgroundColor="@color/white_background"
+        card_view:cardCornerRadius="22dp"
+        card_view:cardElevation="4dp"
+
+        >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#fff"
+            android:padding="8dp"
+            >
+
+            <ImageView
+                android:id="@+id/myImage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/k5" />
+
+            <TextView
+                android:id="@+id/listItemName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/myImage"
+                android:maxLines="3"
+                android:padding="4dp"
+                android:text="Sample Title"
+                android:textColor="#222"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/listItemDesc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/listItemName"
+                android:maxLines="3"
+                android:padding="4dp"
+                android:text="Sample Desc text"
+                android:textColor="#666"
+                android:textSize="14sp" />
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>
+
+
+    <!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"--><!--xmlns:tools="http://schemas.android.com/tools"--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content"--><!--android:background="@color/tan_background"--><!--android:orientation="vertical">-->
+
+    <!--<LinearLayout--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content"--><!--android:background="@color/tan_background"--><!--android:orientation="vertical">-->
+
+    <!--<ImageView-->
+
+    <!--android:id="@+id/myImage"--><!--android:layout_width="wrap_content"--><!--android:layout_height="wrap_content"--><!--android:minHeight="@dimen/list_item_height"--><!--android:minWidth="@dimen/list_item_height"--><!--android:src="@mipmap/ic_launcher" />-->
+
+    <!--<LinearLayout--><!--android:id="@+id/wordsLayout"--><!--android:layout_width="match_parent"--><!--android:layout_height="match_parent"--><!--android:background="@color/category_osaka"--><!--android:gravity="center"--><!--android:minHeight="@dimen/list_item_height"--><!--android:minWidth="@dimen/list_item_height"--><!--android:orientation="vertical"--><!--android:paddingLeft="@dimen/activity_horizontal_margin">-->
+
+    <!--<TextView--><!--android:id="@+id/listItemName"--><!--style="@style/ListStyleBold"--><!--tools:text="Place" />-->
+
+    <!--<TextView--><!--android:id="@+id/listItemDesc"--><!--style="@style/ListStyle"--><!--tools:text="Desc" />--><!--</LinearLayout>-->
+
+    <!--</LinearLayout>-->
+
+    <!--</LinearLayout>-->
+
