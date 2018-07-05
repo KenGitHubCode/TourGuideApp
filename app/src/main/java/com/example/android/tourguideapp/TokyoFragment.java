@@ -1,11 +1,9 @@
 package com.example.android.tourguideapp;
 
-import android.content.Context;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,121 +18,127 @@ import java.util.ArrayList;
 
 public class TokyoFragment extends Fragment {
 
-    /**
-     * global variables
-     */
-    // Medai Player and Audio Manager: instance that will be assigned during onclick listener
-    private MediaPlayer mp;
-    private AudioManager mAudioManager;
-    // Audio Focus and set to default false
-    private boolean mAudioFocusGranted = false;
-    // Context for Audio Focus methods
-    private Context mContext;
+    //Note there are no global variables for this application
 
-
-    //REQUIRED empty public constructor
     public TokyoFragment() {
         // REQUIRED empty public constructor
     }
 
     /**
-     * Audio Focus Listener / management
-     * To ensure app reacts with other apps' audio appropriately
-     * Code base from : https://medium.com/google-developers/how-to-properly-handle-audio-interruptions-3a13540d18fa
-     */
-    private AudioManager.OnAudioFocusChangeListener afChangeListener =
-            new AudioManager.OnAudioFocusChangeListener() {
-
-                public void onAudioFocusChange(int focusChange) {
-                    if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT) {
-                        // Pause playback because your Audio Focus was
-                        // temporarily stolen, but will be back soon. i.e. for a phone call
-                        if (mp != null && mp.isPlaying() == true) {
-                            mp.pause();
-                        }
-                    } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
-                        // Stop playback, because you lost the Audio Focus.
-                        // i.e. the user started some other playback app
-                        releaseMediaPlayer();
-                    } else if (focusChange ==
-                            AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {
-                        // Lower the volume, because something else is also
-                        // playing audio over you. i.e. for notifications or navigation directions
-                        if (mp != null) {
-                            mp.setVolume(0.1f, 0.1f);
-                        }
-                    } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
-                        // Resume playback and normal volume, because you hold the Audio Focus
-                        // again! i.e. the phone call ended or the nav directions are finished
-                        if (mp != null) {
-                            mp.setVolume(1f, 1f);
-                        }
-                        requestAudioFocus();
-                        mp.start();
-                    }
-                }
-            };
-
-    /**
-     * OnCreateView
-     * Used instead of OnCreate due to fragment requirements
+     * OnCreateView - used instead of OnCreate due to fragment requirements
      */
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         // Create and set rootView to inflate the list within the container
         View rootView = inflater.inflate(R.layout.word_list, container, false);
 
-        // Assign the {@link AudioManager} to request audio focus
-        mAudioManager = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
-
-        // Set context
-        mContext = getActivity().getApplicationContext();
-
         // Create ArrayList  , using ArrayList for variable size array
         final ArrayList<Place> places = new ArrayList<Place>();
         // Add values to the ArrayList item
-        places.add(new Place("Neko Café Time", "Fushimi ward, Kyoto", R.drawable.k5));
-        places.add(new Place("Neko Café Time", "Fushimi ward, Kyoto", R.drawable.k5));
+        places.add(new Place("Hachikō Statue", "Shibuya, Tokyo", "Hachikō (ハチ公, November 10, 1923 – March 8, 1935) was an Akita dog born on a farm near the city of Ōdate, Akita Prefecture,[2] Japan. He is remembered for his remarkable loyalty to his owner, Hidesaburō Ueno, for whom he continued to wait for over nine years following his death.[3] Hachikō is known in Japanese as chūken Hachikō (忠犬ハチ公) \"faithful dog Hachikō\", hachi meaning \"eight\" and the suffix -kō indicating affection.[4] During his lifetime, the dog was held up in Japanese culture as an example of loyalty and fidelity. Well after his death, he continues to be remembered in worldwide popular culture, with statues, movies, books, and appearances in various media.",
+                R.drawable.t1));
+        places.add(new Place("Sensō-ji", "Asakusa, Tokyo", "Sensō-ji (金龍山浅草寺 Kinryū-zan Sensō-ji) is an ancient Buddhist temple located in Asakusa, Tokyo, Japan. It is Tokyo's oldest temple, and one of its most significant. Formerly associated with the Tendai sect of Buddhism, it became independent after World War II. Adjacent to the temple is a five-story pagoda, Shinto shrine, the Asakusa Shrine,[1] as well as many shops with traditional goods in the Nakamise-dōri[2]\n" +
+                "\n" +
+                "The Sensoji Kannon temple is dedicated to Kannon Bosatsu, the Bodhisattva of compassion, and is the most widely visited spiritual site in the world with over 30 million visitors annually.[3][4]\n" +
+                "\n" +
+                "It ranks among the top 10 temples in Japan for the number of visitors in the new year.",
+                R.drawable.t2asakusa));
+        places.add(new Place("Shinjuku Golden Gai", "Shinjuku, Tokyo", "Shinjuku Golden Gai (新宿ゴールデン街) is a small area of Shinjuku, Tokyo, Japan,[1] famous both as an area of architectural interest and for its nightlife. It is composed of a network of six narrow alleys, connected by even narrower passageways which are just about wide enough for a single person to pass through. Over 200 tiny shanty-style bars, clubs and eateries[2] are squeezed into this area. In this area, shooting photographs and video for commercial purposes on the street is prohibited without permission of the area's business promotion association.",
+                R.drawable.t3goldengai));
+        places.add(new Place("Genki Sushi", "Shibuya, Tokyo", "Genki Sushi was founded in 1968 with the promise of bringing sushi to the masses.\n" +
+                "Today, now that Kaiten Sushi has become more familiar to the general population,our nextaim is to make our brand synonymous with sushi.\n" +
+                "We want our brand to be the first thing people think of every time they think of eating sushi.\n" +
+                "In order to achieve this, weare focusing all our energy on our customers.\n" +
+                "Nothing gives us greater pleasure than exciting and impressing our customers with each plate we serve,and we believe that remaining true to this commitment will serve to increase our fan base and secure a solid footing in the sushi market.\n" +
+                "Each and every one of our staff is committed to raising the quality in everything we do in order to excite and impress.\n" +
+                "Genki Sushi will continue to pursue the high level of quality commonly associated with sushi in Japan.",
+                R.drawable.t4genki));
+        places.add(new Place("Owl Cafe", "Toshima-ku, Tokyo", "You can meet up to more than 20 small animals (somewhat rare?) in the Ikemofu Animal Room♪\n" +
+                "Our highly unique staff members interact, play, and run around with guests...Please enjoy our relaxing space.",
+                R.drawable.t5owl));
+        places.add(new Place("Akihabara", "Chiyoda ward, Tokyo", "Akihabara (Japanese: 秋葉原) is a common name for the area around Akihabara Station in the Chiyoda ward of Tokyo, Japan. Administratively, the area called Akihabara mainly belongs to the Sotokanda (外神田) and Kanda-Sakumachō districts in Chiyoda. There exists an administrative district called Akihabara in the Taitō ward further north of Akihabara Station, but it is not the place people generally refer to as Akihabara.",
+                R.drawable.t6akihabara));
+        places.add(new Place("Ueno", "Taitō Ward, Tokyo", "Ueno (上野 upper wild field) is a district in Tokyo's Taitō Ward, best known as the home of Ueno Park. Ueno is also home to some of Tokyo's finest cultural sites, including the Tokyo National Museum, the National Museum of Western Art, and the National Museum of Nature and Science, as well as a major public concert hall. Many Buddhist temples are in the area, including the Bentendo temple dedicated to goddess Benzaiten, on an island in Shinobazu Pond. The Kan'ei-ji, a major temple of the Tokugawa shōguns, stood in this area, and its pagoda is now within the grounds of the Ueno Zoo. Nearby is the Ueno Tōshō-gū, a Shinto shrine dedicated to Tokugawa Ieyasu. Near the Tokyo National Museum there is The International Library of Children's Literature. Just south of the station is the Ameya-yokochō, a street market district that evolved out of an open-air black market that sprung up after World War II. Just east is the Ueno motorcycle district, with English-speaking staff available in some stores.",
+                R.drawable.t7uano));
 
         //initialize itemsAdapter using places ArrayList
-        PlaceAdapter adapter = new PlaceAdapter(getActivity(), places, R.color.white_background);
+        PlaceAdapter adapter = new PlaceAdapter(getActivity(), places);
         //Initialize listView as the list View from the applicable xml file
-        ListView listView = (ListView) rootView.findViewById(R.id.list);
+        ListView listView = rootView.findViewById(R.id.list);
         //set the adapter for listView (which is "list" view in the applicable xml) to itemsView using places
         listView.setAdapter(adapter);
 
 
         /**
          *  Set on item click listener block
-         *  Creates Variable of clicked item, releases media player, requests Audio focus,
-         *      assigned media resource to player and starts
-         * listens for completion of media player and then releases
+         *  Creates Variable of clicked item, assigns intent values and starts activity
          */
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //Create class instance to reference when assigning resource
-                Place selectedPlace = places.get(position);
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-                // RELEASE media player before assigning new media
-                releaseMediaPlayer();
+                //Creating a Class variable to hold the destination activity depending on Switch below
+                Class myActivityToIntent = PlaceInfoViewer.class;
 
-                //request Audio FOCUS before playing
-                if (requestAudioFocus()) {
-                    //ASSIGN RESOURCE based on position of clicked item and play ie start
-                    mp = MediaPlayer.create(getActivity(), selectedPlace.getItemAudio());
-                    //PLAY the mediaplayer
-                    mp.start();
-                    //RELEASE: SetOnCompletionListen to ivoke RELEASE after playback to reduce memory usage
-                    mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                        @Override
-                        public void onCompletion(MediaPlayer mediaPlayer) {
-                            releaseMediaPlayer();
-                        }
-                    });
-                }
+                // Create a new intent to open the {@link applicable activity}
+                Intent myIntent = new Intent(getActivity().getApplicationContext(), myActivityToIntent);
+
+                //Switch based on position in ListView, hardcoded based on ArrayList addition order
+                switch (i) {
+                    case 0:
+                        myIntent.putExtra("myTitle", places.get(i).getPlaceTitle());
+                        myIntent.putExtra("mySubTitle", places.get(i).getPlaceSubtitle());
+                        myIntent.putExtra("myDesc", places.get(i).getPlaceDesc());
+                        myIntent.putExtra("myImg", places.get(i).getItemImage());
+                        break;
+                    case 1:
+                        myIntent.putExtra("myTitle", places.get(i).getPlaceTitle());
+                        myIntent.putExtra("mySubTitle", places.get(i).getPlaceSubtitle());
+                        myIntent.putExtra("myDesc", places.get(i).getPlaceDesc());
+                        myIntent.putExtra("myImg", places.get(i).getItemImage());
+                        break;
+                    case 2:
+                        myIntent.putExtra("myTitle", places.get(i).getPlaceTitle());
+                        myIntent.putExtra("mySubTitle", places.get(i).getPlaceSubtitle());
+                        myIntent.putExtra("myDesc", places.get(i).getPlaceDesc());
+                        myIntent.putExtra("myImg", places.get(i).getItemImage());
+                        break;
+                    case 3:
+                        myIntent.putExtra("myTitle", places.get(i).getPlaceTitle());
+                        myIntent.putExtra("mySubTitle", places.get(i).getPlaceSubtitle());
+                        myIntent.putExtra("myDesc", places.get(i).getPlaceDesc());
+                        myIntent.putExtra("myImg", places.get(i).getItemImage());
+                        break;
+                    case 4:
+                        myIntent.putExtra("myTitle", places.get(i).getPlaceTitle());
+                        myIntent.putExtra("mySubTitle", places.get(i).getPlaceSubtitle());
+                        myIntent.putExtra("myDesc", places.get(i).getPlaceDesc());
+                        myIntent.putExtra("myImg", places.get(i).getItemImage());
+                        break;
+                    case 5:
+                        myIntent.putExtra("myTitle", places.get(i).getPlaceTitle());
+                        myIntent.putExtra("mySubTitle", places.get(i).getPlaceSubtitle());
+                        myIntent.putExtra("myDesc", places.get(i).getPlaceDesc());
+                        myIntent.putExtra("myImg", places.get(i).getItemImage());
+                        break;
+                    case 6:
+                        myIntent.putExtra("myTitle", places.get(i).getPlaceTitle());
+                        myIntent.putExtra("mySubTitle", places.get(i).getPlaceSubtitle());
+                        myIntent.putExtra("myDesc", places.get(i).getPlaceDesc());
+                        myIntent.putExtra("myImg", places.get(i).getItemImage());
+                        break;
+                    default:
+                        myIntent.putExtra("myTitle", "Item is missing.");
+                        myIntent.putExtra("mySubTitle", places.get(0).getPlaceSubtitle());
+                        myIntent.putExtra("myDesc", places.get(i).getPlaceDesc());
+                        myIntent.putExtra("myImg", places.get(0).getItemImage());
+                        break;
+                } // End Switch
+
+                // Start the new activity
+                startActivity(myIntent);
 
             }
         }); // END setOnItemClickListener
@@ -143,75 +147,4 @@ public class TokyoFragment extends Fragment {
         return rootView;
     } // End OnCreateView
 
-    /**
-     * Audio Focus request
-     * Code base from : https://gist.github.com/kuccello/5816882
-     */
-    private boolean requestAudioFocus() {
-        if (!mAudioFocusGranted) {
-
-            // Request audio focus for play back
-            int result = mAudioManager.requestAudioFocus(afChangeListener,
-                    // Use the music stream.
-                    AudioManager.STREAM_MUSIC,
-                    // Request permanent focus.
-                    AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
-
-            if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-                mAudioFocusGranted = true;
-            } else {
-                // FAILED
-                Log.e("Error", ">>>>>>>>>>>>> FAILED TO GET AUDIO FOCUS <<<<<<<<<<<<<<<<<<<<<<<<");
-            }
-        }
-        return mAudioFocusGranted;
-    }
-
-    /**
-     * Audio Focus abandon for when focus is lost
-     * Code base from : https://gist.github.com/kuccello/5816882
-     */
-    private void abandonAudioFocus() {
-        AudioManager am = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
-        int result = am.abandonAudioFocus(afChangeListener);
-        if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-            mAudioFocusGranted = false;
-        } else {
-            // FAILED
-            Log.e("Error",
-                    ">>>>>>>>>>>>> FAILED TO ABANDON AUDIO FOCUS <<<<<<<<<<<<<<<<<<<<<<<<");
-        }
-        afChangeListener = null;
-    }
-
-    /**
-     * OnStop now only Cleans up the media player by releasing its resources.
-     */
-    @Override
-    public void onStop() {
-        super.onStop();
-        releaseMediaPlayer();
-    }
-
-    /**
-     * Clean up the media player by releasing its resources.
-     */
-    private void releaseMediaPlayer() {
-        // If the media player is not null, then it may be currently playing a sound.
-        if (mp != null) {
-            // Regardless of the current state of the media player, release its resources
-            // because we no longer need it.
-            mp.release();
-            // Set the media player back to null. For our code, we've decided that
-            // setting the media player to null is an easy way to tell that the media player
-            // is not configured to play an audio file at the moment.
-            mp = null;
-        }
-
-        // Abandond Focus when Media Player resource is released
-        abandonAudioFocus();
-
-    } // END releaseMediaPlayer
-
 } // END class
-

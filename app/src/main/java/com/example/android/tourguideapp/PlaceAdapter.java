@@ -1,6 +1,7 @@
 package com.example.android.tourguideapp;
 
 import android.app.Activity;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,30 +13,29 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 /**
- * Created by redne on 3/27/2018.
+ * Created by Ken Muckey on 3/27/2018.
  */
 
 public class PlaceAdapter extends ArrayAdapter<Place> {
 
 
-    private static final String LOG_TAG = PlaceAdapter.class.getSimpleName();
+    // --Commented out by Inspection (7/5/2018 10:06 AM):private static final String LOG_TAG = PlaceAdapter.class.getSimpleName();
     private int viewBGColor;
 
     /**
      * This is our own custom constructor (it doesn't mirror a superclass constructor).
      * The context is used to inflate the layout file, and the list is the data we want
      * to populate into the lists.
-     *
-     * @param context The current context. Used to inflate the layout file.
-     * @param places   A List of Place objects to display in a list
+     *  @param context The current context. Used to inflate the layout file.
+     * @param places  A List of Place objects to display in a list
      */
-    public PlaceAdapter(Activity context, ArrayList<Place> places, int myBGColor) {
+    public PlaceAdapter(Activity context, ArrayList<Place> places) {
         // Here, we initialize the ArrayAdapter's internal storage for the context and the list.
         // the second argument is used when the ArrayAdapter is populating a single TextView.
         // Because this is a custom adapter for two TextViews and an ImageView, the adapter is not
         // going to use this second argument, so it can be any value. Here, we used 0.
         super(context, 0, places);
-        viewBGColor = myBGColor;
+        viewBGColor = R.color.white_background;
     }
 
     /**
@@ -47,8 +47,9 @@ public class PlaceAdapter extends ArrayAdapter<Place> {
      * @param parent      The parent ViewGroup that is used for inflation.
      * @return The View for the position in the AdapterView.
      */
+    @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         // Check if the existing view is being reused, otherwise inflate the view
         View listItemView = convertView;
 
@@ -57,26 +58,25 @@ public class PlaceAdapter extends ArrayAdapter<Place> {
                     R.layout.list_item, parent, false);
         }
 
-
         // Get the {@link Place} object located at this position in the list
         Place currentPlace = getItem(position);
 
-        /*  JAPANESE WORD ***********************************/
+        /*  first place ***********************************/
         // Find the TextView in the list_item.xml layout with the ID version_name
-        TextView jTextView = (TextView) listItemView.findViewById(R.id.listItemName);
+        TextView firstTextView = listItemView.findViewById(R.id.listItemName);
         // Get the version name from the current Place object and set this text on the name TextView
-        jTextView.setText(currentPlace.getPlaceTitle());
+        firstTextView.setText(currentPlace.getPlaceTitle());
 
 
-        /* ENGLISH WORD ***********************************/
+        /* second place ***********************************/
         // Find the TextView in the list_item.xml layout with the ID version_number
-        TextView eTextView = (TextView) listItemView.findViewById(R.id.listItemDesc);
+        TextView secondTextView = listItemView.findViewById(R.id.listItemDesc);
         // Get the version number from the current Place object and set this text on the number TextView
-        eTextView.setText(currentPlace.getPlaceSubtitle());
+        secondTextView.setText(currentPlace.getPlaceSubtitle());
 
         /* IMAGE FOR ITEM ***********************************/
         // Find the imageview in list_item.xml
-        ImageView myImageView = (ImageView) listItemView.findViewById(R.id.myImage);
+        ImageView myImageView = listItemView.findViewById(R.id.myImage);
         if (currentPlace.hasImage()) {
             // Get the image resource and set it to the image view
             myImageView.setImageResource(currentPlace.getItemImage());

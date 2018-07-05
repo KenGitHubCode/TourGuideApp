@@ -1,7 +1,5 @@
-package com.example.android.tourguideapp;
-
-/**
- * Created by redne on 7/1/2018.
+package com.example.android.tourguideapp; /**
+ * Created by Ken Muckey on 7/1/2018.
  */
 
 

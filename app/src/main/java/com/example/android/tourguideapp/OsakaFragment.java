@@ -1,11 +1,9 @@
 package com.example.android.tourguideapp;
 
-import android.content.Context;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,121 +18,86 @@ import java.util.ArrayList;
 
 public class OsakaFragment extends Fragment {
 
-    /**
-     * global variables
-     */
-    // Medai Player and Audio Manager: instance that will be assigned during onclick listener
-    private MediaPlayer mp;
-    private AudioManager mAudioManager;
-    // Audio Focus and set to default false
-    private boolean mAudioFocusGranted = false;
-    // Context for Audio Focus methods
-    private Context mContext;
+    //Note there are no global variables for this application
 
-
-    //REQUIRED empty public constructor
     public OsakaFragment() {
         // REQUIRED empty public constructor
     }
 
     /**
-     * Audio Focus Listener / management
-     * To ensure app reacts with other apps' audio appropriately
-     * Code base from : https://medium.com/google-developers/how-to-properly-handle-audio-interruptions-3a13540d18fa
-     */
-    private AudioManager.OnAudioFocusChangeListener afChangeListener =
-            new AudioManager.OnAudioFocusChangeListener() {
-
-                public void onAudioFocusChange(int focusChange) {
-                    if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT) {
-                        // Pause playback because your Audio Focus was
-                        // temporarily stolen, but will be back soon. i.e. for a phone call
-                        if (mp != null && mp.isPlaying() == true) {
-                            mp.pause();
-                        }
-                    } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
-                        // Stop playback, because you lost the Audio Focus.
-                        // i.e. the user started some other playback app
-                        releaseMediaPlayer();
-                    } else if (focusChange ==
-                            AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {
-                        // Lower the volume, because something else is also
-                        // playing audio over you. i.e. for notifications or navigation directions
-                        if (mp != null) {
-                            mp.setVolume(0.1f, 0.1f);
-                        }
-                    } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
-                        // Resume playback and normal volume, because you hold the Audio Focus
-                        // again! i.e. the phone call ended or the nav directions are finished
-                        if (mp != null) {
-                            mp.setVolume(1f, 1f);
-                        }
-                        requestAudioFocus();
-                        mp.start();
-                    }
-                }
-            };
-
-    /**
-     * OnCreateView
-     * Used instead of OnCreate due to fragment requirements
+     * OnCreateView - used instead of OnCreate due to fragment requirements
      */
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         // Create and set rootView to inflate the list within the container
         View rootView = inflater.inflate(R.layout.word_list, container, false);
 
-        // Assign the {@link AudioManager} to request audio focus
-        mAudioManager = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
-
-        // Set context
-        mContext = getActivity().getApplicationContext();
-
         // Create ArrayList  , using ArrayList for variable size array
-        final ArrayList<Place> places = new ArrayList<Place>();
+        final ArrayList<Place> places = new ArrayList<>();
         // Add values to the ArrayList item
-        places.add(new Place("Neko Café Time", "Fushimi ward, Kyoto", R.drawable.k5));
-        places.add(new Place("Neko Café Time", "Fushimi ward, Kyoto", R.drawable.k5));
+        places.add(new Place("Osaka Castle", "Osaka Prefecture", "Osaka Castle (大坂城 or 大阪城, Ōsaka-jō) is a Japanese castle in Chūō-ku, Osaka, Japan. The castle is one of Japan's most famous landmarks and it played a major role in the unification of Japan during the sixteenth century of the Azuchi-Momoyama period.[1]",
+                R.drawable.o1));
+        places.add(new Place("Umeda Sky Building", "Umeda district of Kita-ku, Osaka", "The Umeda Sky Building (梅田スカイビル Umeda Sukai Biru) is the nineteenth-tallest[1] building in Osaka Prefecture, Japan, and one of the city's most recognizable landmarks. It consists of two 40-story towers that connect at their two uppermost stories, with bridges and an escalator crossing the wide atrium-like space in the center.[2] It is located in Umeda district of Kita-ku, Osaka.",
+                R.drawable.o2building));
+        places.add(new Place("Dōtonbori", "Osaka Prefecture", "Dōtonbori or Dōtombori (道頓堀, pronounced [doːtomboɾi]) is one of the principal tourist destinations in Osaka, Japan, running along the Dōtonbori canal from Dōtonboribashi Bridge to Nipponbashi Bridge in the Namba district of the city's Chuo ward. Historically a theater district, it is now a popular nightlife and entertainment area characterized by its eccentric atmosphere and large illuminated signboards.\n" +
+                "\n" +
+                "One of the area's most prominent features, a billboard for confectionery company Glico displaying the image of a runner crossing a finishing line, is seen as an icon of Osaka within Japan.",
+                R.drawable.o3dotonbori));
 
         //initialize itemsAdapter using places ArrayList
-        PlaceAdapter adapter = new PlaceAdapter(getActivity(), places, R.color.white_background);
+        PlaceAdapter adapter = new PlaceAdapter(getActivity(), places);
         //Initialize listView as the list View from the applicable xml file
-        ListView listView = (ListView) rootView.findViewById(R.id.list);
+        ListView listView = rootView.findViewById(R.id.list);
         //set the adapter for listView (which is "list" view in the applicable xml) to itemsView using places
         listView.setAdapter(adapter);
 
 
         /**
          *  Set on item click listener block
-         *  Creates Variable of clicked item, releases media player, requests Audio focus,
-         *      assigned media resource to player and starts
-         * listens for completion of media player and then releases
+         *  Creates Variable of clicked item, assigns intent values and starts activity
          */
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //Create class instance to reference when assigning resource
-                Place selectedPlace = places.get(position);
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-                // RELEASE media player before assigning new media
-                releaseMediaPlayer();
+                //Creating a Class variable to hold the destination activity depending on Switch below
+                Class myActivityToIntent = PlaceInfoViewer.class;
 
-                //request Audio FOCUS before playing
-                if (requestAudioFocus()) {
-                    //ASSIGN RESOURCE based on position of clicked item and play ie start
-                    mp = MediaPlayer.create(getActivity(), selectedPlace.getItemAudio());
-                    //PLAY the mediaplayer
-                    mp.start();
-                    //RELEASE: SetOnCompletionListen to ivoke RELEASE after playback to reduce memory usage
-                    mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                        @Override
-                        public void onCompletion(MediaPlayer mediaPlayer) {
-                            releaseMediaPlayer();
-                        }
-                    });
-                }
+                // Create a new intent to open the {@link applicable activity}
+                Intent myIntent = new Intent(getActivity().getApplicationContext(), myActivityToIntent);
+
+                //Switch based on position in ListView, hardcoded based on ArrayList addition order
+                switch (i) {
+                    case 0:
+                        myIntent.putExtra("myTitle", places.get(i).getPlaceTitle());
+                        myIntent.putExtra("mySubTitle", places.get(i).getPlaceSubtitle());
+                        myIntent.putExtra("myDesc", places.get(i).getPlaceDesc());
+                        myIntent.putExtra("myImg", places.get(i).getItemImage());
+                        break;
+                    case 1:
+                        myIntent.putExtra("myTitle", places.get(i).getPlaceTitle());
+                        myIntent.putExtra("mySubTitle", places.get(i).getPlaceSubtitle());
+                        myIntent.putExtra("myDesc", places.get(i).getPlaceDesc());
+                        myIntent.putExtra("myImg", places.get(i).getItemImage());
+                        break;
+                    case 2:
+                        myIntent.putExtra("myTitle", places.get(i).getPlaceTitle());
+                        myIntent.putExtra("mySubTitle", places.get(i).getPlaceSubtitle());
+                        myIntent.putExtra("myDesc", places.get(i).getPlaceDesc());
+                        myIntent.putExtra("myImg", places.get(i).getItemImage());
+                        break;
+                    default:
+                        myIntent.putExtra("myTitle", "Item is missing.");
+                        myIntent.putExtra("mySubTitle", places.get(0).getPlaceSubtitle());
+                        myIntent.putExtra("myDesc", places.get(i).getPlaceDesc());
+                        myIntent.putExtra("myImg", places.get(0).getItemImage());
+                        break;
+                } // End Switch
+
+                // Start the new activity
+                startActivity(myIntent);
 
             }
         }); // END setOnItemClickListener
@@ -143,75 +106,4 @@ public class OsakaFragment extends Fragment {
         return rootView;
     } // End OnCreateView
 
-    /**
-     * Audio Focus request
-     * Code base from : https://gist.github.com/kuccello/5816882
-     */
-    private boolean requestAudioFocus() {
-        if (!mAudioFocusGranted) {
-
-            // Request audio focus for play back
-            int result = mAudioManager.requestAudioFocus(afChangeListener,
-                    // Use the music stream.
-                    AudioManager.STREAM_MUSIC,
-                    // Request permanent focus.
-                    AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
-
-            if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-                mAudioFocusGranted = true;
-            } else {
-                // FAILED
-                Log.e("Error", ">>>>>>>>>>>>> FAILED TO GET AUDIO FOCUS <<<<<<<<<<<<<<<<<<<<<<<<");
-            }
-        }
-        return mAudioFocusGranted;
-    }
-
-    /**
-     * Audio Focus abandon for when focus is lost
-     * Code base from : https://gist.github.com/kuccello/5816882
-     */
-    private void abandonAudioFocus() {
-        AudioManager am = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
-        int result = am.abandonAudioFocus(afChangeListener);
-        if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-            mAudioFocusGranted = false;
-        } else {
-            // FAILED
-            Log.e("Error",
-                    ">>>>>>>>>>>>> FAILED TO ABANDON AUDIO FOCUS <<<<<<<<<<<<<<<<<<<<<<<<");
-        }
-        afChangeListener = null;
-    }
-
-    /**
-     * OnStop now only Cleans up the media player by releasing its resources.
-     */
-    @Override
-    public void onStop() {
-        super.onStop();
-        releaseMediaPlayer();
-    }
-
-    /**
-     * Clean up the media player by releasing its resources.
-     */
-    private void releaseMediaPlayer() {
-        // If the media player is not null, then it may be currently playing a sound.
-        if (mp != null) {
-            // Regardless of the current state of the media player, release its resources
-            // because we no longer need it.
-            mp.release();
-            // Set the media player back to null. For our code, we've decided that
-            // setting the media player to null is an easy way to tell that the media player
-            // is not configured to play an audio file at the moment.
-            mp = null;
-        }
-
-        // Abandond Focus when Media Player resource is released
-        abandonAudioFocus();
-
-    } // END releaseMediaPlayer
-
 } // END class
-
