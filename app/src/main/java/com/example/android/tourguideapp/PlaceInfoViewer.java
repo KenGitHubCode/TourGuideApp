@@ -31,15 +31,15 @@ public class PlaceInfoViewer extends AppCompatActivity {
                 newStringForSub = null;
                 newStringforDesc = null;
             } else {
-                newString = extras.getString("myTitle");
-                newStringForSub = extras.getString("mySubTitle");
-                newStringforDesc = extras.getString("myDesc");
-                newImg = extras.getInt("myImg"); //note: this value is an int
+                newString = extras.getString(getString(R.string.myTitle));
+                newStringForSub = extras.getString(getString(R.string.mySubTitle));
+                newStringforDesc = extras.getString(getString(R.string.myDesc));
+                newImg = extras.getInt(getString(R.string.myImg)); //note: this value is an int
             }
         } else {
-            newString = (String) savedInstanceState.getSerializable("STRING_I_NEED");
-            newStringForSub = (String) savedInstanceState.getSerializable("STRING_I_NEED");
-            newStringforDesc = (String) savedInstanceState.getSerializable("STRING_I_NEED");
+            newString = (String) savedInstanceState.getSerializable(getString(R.string.string_i_need));
+            newStringForSub = (String) savedInstanceState.getSerializable(getString(R.string.string_i_need));
+            newStringforDesc = (String) savedInstanceState.getSerializable(getString(R.string.string_i_need));
         }
 
         // places ArrayList initialize, using ArrayList for variable size array
@@ -57,9 +57,5 @@ public class PlaceInfoViewer extends AppCompatActivity {
         //set the adapter for listView (which is "list" view in the applicable xml) to itemsView using places
         mylistView.setAdapter(itemsAdapter);
 
-        //LOGCAT Loop for values recording
-        for (int index = 0; index < places.size(); index++) {
-            Log.v("PlaySong: ", "Value at index " + index + ": " + places.get(index));
-        }
     }
 }

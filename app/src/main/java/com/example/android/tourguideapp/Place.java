@@ -78,13 +78,5 @@ public class Place {
         return imageResourceID != -1;
     }
 
-    @Override
-    public String toString() {
-        return "Place{" +
-                "placeTitle='" + placeTitle + '\'' +
-                ", placeSubtitle='" + placeSubtitle + '\'' +
-                ", imageResourceID=" + imageResourceID +
-                ", placeDesc =" + getPlaceDesc() +
-                '}';
-    }
+
 }
